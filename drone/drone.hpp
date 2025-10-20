@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-class drone { 
+class drone { // TODO
 private:
     double curr_x;
     double curr_y;
