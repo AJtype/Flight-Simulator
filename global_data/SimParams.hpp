@@ -7,13 +7,13 @@ struct Command  {
     double x;
     double y;
 
-    void print();
+    void print() const;
 };
 
 struct SimParams {
     double dt;
     int nUav;
-    double r;
+    double r0;
     double x0;
     double y0;
     double z0;
@@ -21,5 +21,5 @@ struct SimParams {
     double az;
     double timeLim;
 
-    void print();
+    void print() const;
 };

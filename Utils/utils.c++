@@ -35,7 +35,7 @@ bool parseSimParams(const std::string &filename, SimParams &params) {
         // Assign values (stod = string to double, stoi = string to integer)
         if (key == "Dt") params.dt = std::stod(value);
         else if (key == "N_uav") params.nUav = std::stoi(value);
-        else if (key == "R") params.r = std::stod(value);
+        else if (key == "R") params.r0 = std::stod(value);
         else if (key == "X0") params.x0 = std::stod(value);
         else if (key == "Y0") params.y0 = std::stod(value);
         else if (key == "Z0") params.z0 = std::stod(value);
