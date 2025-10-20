@@ -1,5 +1,14 @@
 #pragma once
 #include <iostream>
+// TODO: change name of file
+struct Command  {
+    double time;
+    int uavId;
+    double x;
+    double y;
+
+    void print();
+};
 
 struct SimParams {
     double dt;
@@ -12,5 +21,5 @@ struct SimParams {
     double az;
     double timeLim;
 
-void printSimParams();
+    void print();
 };

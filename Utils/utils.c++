@@ -46,3 +46,23 @@ bool parseSimParams(const std::string &filename, SimParams &params) {
 
     return true;
 }
+
+bool parseCommands(const std::string &filename, std::vector<Command> &commands) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error: Cannot open " << filename << std::endl;
+        return false;
+    }
+
+    Command cmd;
+    while (file >> cmd.time >> cmd.uavId >> cmd.x >> cmd.y) {
+        commands.push_back(cmd);
+    }
+    file.close();
+
+    // Sort commands by time
+    std::sort(commands.begin(), commands.end(),
+              [](const Command& a, const Command& b) { return a.time < b.time; });
+    
+    return true;
+}
