@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 struct SimParams {
     double dt;
@@ -10,4 +11,6 @@ struct SimParams {
     double v0;
     double az;
     double timeLim;
+
+void printSimParams();
 };
