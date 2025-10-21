@@ -18,7 +18,6 @@ private:
 
     double target_x;
     double target_y;
-    double target_z; // currently doesn't change
 
     double azimuth; // TODO: in what format is this saved?
     double minRadius; // currently doesn't change

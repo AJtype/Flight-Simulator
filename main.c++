@@ -1,19 +1,18 @@
 #include "Utils/utils.hpp"
 #include "global_data/SimParams.hpp"
-#include "UAV/UAV.c++"
+#include "UAV/UAV.hpp"
 #include <fstream>
 
 int main() {
     std::vector<Command> commands;
-    std::string cmdsFile("../SimCmds.txt");
     SimParams params;
     std::vector<UAV> drones;
 
     // Parse
-    if (parseSimParams("../SimParams.ini", params)) {
+    if (!parseSimParams("../SimCmds.txt", params)) {
         std::cout << "error with SimParams.ini" << std::endl;
         return 1;
-    } if (parseCommands("../SimCmds.txt", commands)) {
+    } if (!parseCommands("../SimParams.ini", commands)) {
         std::cout << "error with SimCmds.txt" << std::endl;
         return 1;
     }
@@ -23,16 +22,12 @@ int main() {
     for (size_t i = 0; i < params.nUav; i++) {
         drones.emplace_back(params, i);
     }
-    
-    // Simulation loop
-    double currentTime = 0.0;
 
-    while (currentTime <= params.timeLim) {
-        // Update all UAVs
+    for (double currentTime = 0.0; currentTime <= params.timeLim; currentTime <= params.timeLim) {
         for (auto &uav : drones) {
             uav.update(params.dt);
             uav.writeOutput(currentTime);
-        } currentTime += params.dt;
+        }
     }
 
     std::cout << "Simulation completed successfully!" << std::endl;
