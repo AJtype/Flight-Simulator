@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <iomanip>
 
 class UAV { // TODO
 private:
@@ -36,7 +37,10 @@ public:
     UAV(const UAV&) = delete; // disable copying
     ~UAV();
 
+    void print() const;
+    int getId() const;
     void setTarget(double tx, double ty);
 
-    void print() const;
+    void update(const double dt);
+    void writeOutput(const double time);
 };

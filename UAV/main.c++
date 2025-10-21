@@ -5,13 +5,16 @@
 void check_UAVConstructor();
 void check_multiple_UAVConstructors();
 void check_setTarget();
+void check_loop();
 
 int main() {
     // check_UAVConstructor();
 
-    check_multiple_UAVConstructors();
+    // check_multiple_UAVConstructors();
 
     // check_setTarget();
+
+    check_loop();
 
     return 0;
 }
@@ -84,4 +87,32 @@ void check_setTarget() {
     }
 
     std::cout << "\n---end of set_target test---\n" << std::endl;
+}
+
+void check_loop() {
+    std::string paramsFile("../SimParams.ini");
+    SimParams params;
+    std::vector<UAV> drones;
+
+    std::cout << "\n---testing main loop---\n" << std::endl;
+
+    parseSimParams(paramsFile, params);
+
+    // initialize UAVs
+    drones.reserve(params.nUav); // avoid vector reallocation
+    for (size_t i = 0; i < params.nUav; i++) {
+        drones.emplace_back(params, i);
+    }
+
+    // Simulation loop
+    double currentTime = 0.0;
+    while (currentTime <= params.timeLim) {
+        // Update all UAVs
+        for (auto &uav : drones) {
+            uav.update(params.dt);
+            uav.writeOutput(currentTime);
+        } currentTime += params.dt;
+    }
+    
+    std::cout << "\n---end of main loop test---\n" << std::endl;
 }

@@ -21,12 +21,6 @@ UAV::~UAV() {
         outFile.close();
 }
 
-void UAV::setTarget(double tx, double ty) {
-    target_x = tx;
-    target_y = ty;
-    isCircling = false;
-}
-
 void UAV::print() const {
     std::cout << "UAV.id = " << id << std::endl;
     std::cout << "UAV.curr_x = " << curr_x << std::endl;
@@ -40,4 +34,27 @@ void UAV::print() const {
     std::cout << "UAV.velocity = " << v0 << std::endl;
     std::cout << "UAV.vx = " << vx << "\tUAV,vy = " << vy << std::endl;
     std::cout << "UAV.isCircling = " << isCircling << std::endl;
+}
+
+int UAV::getId() const {
+    return id;
+}
+
+void UAV::setTarget(double tx, double ty)
+{
+    target_x = tx;
+    target_y = ty;
+    isCircling = false;
+}
+
+void UAV::update(const double dt) {
+    curr_x= vx * dt;
+    curr_y += vy * dt;
+}
+
+void UAV::writeOutput(const double time) {
+    if (outFile.is_open()) {
+        outFile << std::fixed << std::setprecision(2)
+                << time << " " << curr_x << " " << curr_y << " " << azimuth << "\n";
+    }
 }
