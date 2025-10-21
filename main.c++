@@ -19,6 +19,16 @@ int main() {
         drones.emplace_back(params, i);
     }
     
+    // Simulation loop
+    double currentTime = 0.0;
+
+    while (currentTime <= params.timeLim) {
+        // Update all UAVs
+        for (auto &uav : drones) {
+            uav.update(params.dt);
+            uav.writeOutput(currentTime);
+        } currentTime += params.dt;
+    }
 
     return 0;
 }

@@ -47,6 +47,7 @@ void UAV::setTarget(double tx, double ty)
     isCircling = false;
 }
 
+// currently only works in a straight line TODO: add complexity
 void UAV::update(const double dt) {
     curr_x= vx * dt;
     curr_y += vy * dt;
