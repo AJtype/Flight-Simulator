@@ -9,9 +9,9 @@ void check_setTarget();
 int main() {
     // check_UAVConstructor();
 
-    // check_multiple_UAVConstructors();
+    check_multiple_UAVConstructors();
 
-    check_setTarget();
+    // check_setTarget();
 
     return 0;
 }

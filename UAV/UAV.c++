@@ -1,9 +1,17 @@
 #include "UAV.hpp"
 
+void UAV::updateVelocity() {
+    double azRad = degToRad(azimuth);
+    vx = v0 * cos(azRad);
+    vy = v0 * sin(azRad);
+}
+
 UAV::UAV(const SimParams &params, const int id)
     : id(id), curr_x(params.x0), curr_y(params.y0), curr_z(params.z0),
       v0(params.v0), minRadius(params.r0), azimuth(params.az),
-      target_x(params.x0), target_y(params.y0), target_z(params.z0), isCircling(true) {
+      target_x(params.x0), target_y(params.y0), target_z(params.z0),
+      isCircling(true) {
+    updateVelocity();
     std::string filename = "UAV" + std::to_string(id) + ".txt";
     outFile.open(filename);
 }
@@ -30,5 +38,6 @@ void UAV::print() const {
     std::cout << "UAV.azimuth = " << azimuth << std::endl;
     std::cout << "UAV.minRadius = " << minRadius << std::endl;
     std::cout << "UAV.velocity = " << v0 << std::endl;
+    std::cout << "UAV.vx = " << vx << "\tUAV,vy = " << vy << std::endl;
     std::cout << "UAV.isCircling = " << isCircling << std::endl;
 }

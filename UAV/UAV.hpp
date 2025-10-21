@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../global_data/SimParams.hpp"
+#include "../Utils/utils.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
 
 class UAV { // TODO
 private:
@@ -24,6 +26,8 @@ private:
     bool isCircling;
 
     std::ofstream outFile;
+
+    void updateVelocity();
 
 public:
     UAV(const SimParams &params, const int id);
