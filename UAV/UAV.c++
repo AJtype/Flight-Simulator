@@ -13,6 +13,12 @@ UAV::~UAV() {
         outFile.close();
 }
 
+void UAV::setTarget(double tx, double ty) {
+    target_x = tx;
+    target_y = ty;
+    isCircling = false;
+}
+
 void UAV::print() const {
     std::cout << "UAV.id = " << id << std::endl;
     std::cout << "UAV.curr_x = " << curr_x << std::endl;

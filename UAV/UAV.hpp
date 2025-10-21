@@ -29,8 +29,9 @@ public:
     UAV(UAV&&) = default; // allow moving
     UAV& operator=(UAV&&) = default;
     UAV(const UAV&) = delete; // disable copying
-
     ~UAV();
+
+    void setTarget(double tx, double ty);
 
     void print() const;
 };
