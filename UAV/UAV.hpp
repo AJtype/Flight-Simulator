@@ -7,7 +7,7 @@
 
 class UAV { // TODO
 private:
-    size_t id;
+    size_t id; // TODO: UAV should assign his own ID
     
     double curr_x;
     double curr_y;

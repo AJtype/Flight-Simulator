@@ -21,9 +21,11 @@ void check_UAVConstructor() {
 
     parseSimParams(paramsFile, params);
 
+    // initialize UAV
     UAV drone(params, 0);
-    std::cout << "first drone = " << std::endl;
 
+    // print UAV params
+    std::cout << "first drone = " << std::endl;
     drone.print();
 
     std::cout << "\n---end of UAV Constructor test---\n" << std::endl;
@@ -38,11 +40,13 @@ void check_multiple_UAVConstructors() {
 
     parseSimParams(paramsFile, params);
 
+    // initialize UAVs
+    drones.reserve(params.nUav); // avoid vector reallocation
     for (size_t i = 0; i < params.nUav; i++) {
-        UAV drone(params, i);
-        drones.push_back(std::move(drone));
+        drones.emplace_back(params, i);
     }
 
+    // print UAVs params
     for (size_t i = 0; i < params.nUav; i++) {
         std::cout << "drone number " << i << ": " << std::endl;
         drones[i].print();
