@@ -19,7 +19,8 @@ private:
 
     double azimuth; // TODO: in what format is this saved?
     double minRadius; // currently doesn't change
-    double velocity; // currently doesn't change // TODO: might change with vx and vy
+    double v0; // currently doesn't change // TODO: might change with vx and vy
+    double vx, vy;
     bool isCircling;
 
     std::ofstream outFile;

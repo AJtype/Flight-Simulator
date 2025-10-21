@@ -66,3 +66,18 @@ bool parseCommands(const std::string &filename, std::vector<Command> &commands) 
     
     return true;
 }
+
+double degToRad(const double deg) {
+    return deg * PI / 180.0;
+}
+
+double radToDeg(const double rad) {
+    return rad * 180.0 / PI;
+}
+
+double normalizeAngle(double angle)
+{
+    while (angle < 0) angle += 360.0;
+    while (angle >= 360.0) angle -= 360.0;
+    return angle;
+}

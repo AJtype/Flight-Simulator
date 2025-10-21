@@ -16,3 +16,12 @@ bool parseSimParams(const std::string& filename, SimParams& params);
 
 // Parse SimCmds.txt
 bool parseCommands(const std::string& filename, std::vector<Command>& commands);
+
+// Convert degrees to radians
+double degToRad(const double deg);
+
+// Convert radians to degrees
+double radToDeg(const double rad);
+
+// Normalize angle to (0 - 360)
+double normalizeAngle(double angle);
