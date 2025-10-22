@@ -7,8 +7,8 @@ void UAV::updateVelocity() {
 }
 
 void UAV::moveStraight(const double dt) {
-    curr_x += vx * dt;
-    curr_y += vy * dt;
+    curr.x += vx * dt;
+    curr.y += vy * dt;
 }
 
 void UAV::moveCircle(const double dt, const double r) {
@@ -33,15 +33,15 @@ void UAV::moveCircle(const double dt, const double r) {
 
 void UAV::computeCenter(const double r) {
     double angle_rad = degToRad(azimuth + 90.0); // 90° to the right for CW center
-    center_x = curr_x + r * cos(angle_rad);
-    center_y = curr_y + r * sin(angle_rad);
+    center.x = curr.x + r * cos(angle_rad);
+    center.y = curr.y + r * sin(angle_rad);
     centerComputed = true;
 }
 
 double UAV::angleDifferenceToTarget() const {
     // Compute angle from UAV to target
-    double dx = curr_x - target_x;
-    double dy = curr_y - target_y;
+    double dx = curr.x - target.x;
+    double dy = curr.y - target.y;
     double targetAngle = normalizeAngle(radToDeg(atan2(dy, dx)));
 
     // Difference from current azimuth
@@ -49,9 +49,9 @@ double UAV::angleDifferenceToTarget() const {
 }
 
 UAV::UAV(const SimParams &params, const int id)
-    : id(id), curr_x(params.x0), curr_y(params.y0), curr_z(params.z0),
+    : id(id), curr{params.start.x, params.start.y}, curr_z(params.z0),
       v0(params.v0), minRadius(params.r0), azimuth(params.az),
-      target_x(params.x0), target_y(params.y0),
+      target{params.start.x, params.start.y},
       state(CIRCLINGAFTERTARGET), centerComputed(false), passed(false) {
     updateVelocity();
     std::string filename = "UAV" + std::to_string(id) + ".txt";
@@ -65,11 +65,11 @@ UAV::~UAV() {
 
 void UAV::print() const {
     std::cout << "UAV.id = " << id << std::endl;
-    std::cout << "UAV.curr_x = " << curr_x << std::endl;
-    std::cout << "UAV.curr_y = " << curr_y << std::endl;
+    std::cout << "UAV.curr.x = " << curr.x << std::endl;
+    std::cout << "UAV.curr.y = " << curr.y << std::endl;
     std::cout << "UAV.curr_z = " << curr_z << std::endl;
-    std::cout << "UAV.target_x = " << target_x << std::endl;
-    std::cout << "UAV.target_y = " << target_y << std::endl;
+    std::cout << "UAV.target.x = " << target.x << std::endl;
+    std::cout << "UAV.target.y = " << target.y << std::endl;
     std::cout << "UAV.azimuth = " << azimuth << std::endl;
     std::cout << "UAV.minRadius = " << minRadius << std::endl;
     std::cout << "UAV.velocity = " << v0 << std::endl;
@@ -82,8 +82,8 @@ int UAV::getId() const {
 }
 
 void UAV::setTarget(double tx, double ty) {
-    target_x = tx;
-    target_y = ty;
+    target.x = tx;
+    target.y = ty;
     state = NEWTARGET;
 }
 
@@ -145,6 +145,6 @@ void UAV::update(const double dt) {
 void UAV::writeOutput(const double time) {
     if (outFile.is_open()) {
         outFile << std::fixed << std::setprecision(2)
-                << time << " " << curr_x << " " << curr_y << " " << azimuth << "\n";
+            << time << " " << curr.x << " " << curr.y << " " << azimuth << "\n";
     }
 }

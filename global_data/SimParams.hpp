@@ -1,11 +1,11 @@
 #pragma once
+#include "../Utils/utils.hpp"
 #include <iostream>
 // TODO: change name of file
 struct Command  {
     double time;
     int uavId;
-    double x;
-    double y;
+    Point target;
 
     void print() const;
 };
@@ -14,8 +14,7 @@ struct SimParams {
     double dt;
     int nUav;
     double r0;
-    double x0;
-    double y0;
+    Point start;
     double z0;
     double v0;
     double az;
@@ -23,3 +22,9 @@ struct SimParams {
 
     void print() const;
 };
+
+// Parse SimParams.ini
+bool parseSimParams(const std::string& filename, SimParams& params);
+
+// Parse SimCmds.txt
+bool parseCommands(const std::string& filename, std::vector<Command>& commands);

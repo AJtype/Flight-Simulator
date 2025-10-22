@@ -21,12 +21,10 @@ class UAV { // TODO
 private:
     size_t id; // TODO: UAV should assign his own ID
     
-    double curr_x;
-    double curr_y;
+    Point curr;
     double curr_z;
 
-    double target_x;
-    double target_y;
+    Point target;
 
     double azimuth; // TODO: in what format is this saved?
     double minRadius; // currently doesn't change
@@ -35,7 +33,7 @@ private:
     StateOption state;
 
     bool centerComputed;
-    double center_x, center_y;
+    Point center;
 
     bool passed;
 
