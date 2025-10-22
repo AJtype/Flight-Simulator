@@ -8,6 +8,8 @@
 #include <cmath>
 #include <iomanip>
 
+constexpr double TOLERANCE = 0.02;
+
 enum StateOption {
     NEWTARGET = 0,
     CIRCLINGAFTERTARGET = 1,
@@ -35,6 +37,8 @@ private:
     bool centerComputed;
     double center_x, center_y;
 
+    bool passed;
+
     std::ofstream outFile;
 
     void updateVelocity();
@@ -43,6 +47,8 @@ private:
     void moveCircle(const double dt, const double r);
 
     void computeCenter(const double r);
+
+    double angleDifferenceToTarget() const; // TODO: test
 
 public:
     UAV(const SimParams &params, const int id);

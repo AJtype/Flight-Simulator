@@ -7,7 +7,7 @@ void UAV::updateVelocity() {
 }
 
 void UAV::moveStraight(const double dt) {
-    curr_x= vx * dt;
+    curr_x += vx * dt;
     curr_y += vy * dt;
 }
 
@@ -22,13 +22,14 @@ void UAV::moveCircle(const double dt, const double r) {
 
     // Update azimuth (convert omega*dt to degrees)
     azimuth = normalizeAngle(azimuth + radToDeg(angularV * dt));
-
-    // Update velocity vectors
     updateVelocity();
 
+    // Position angle is 90° offset from heading (CW flight)
+    double posAngle = degToRad(azimuth - 90);
+
     // Move along circle path
-    curr_x = center_x + r * cos(degToRad(azimuth));
-    curr_y = center_y + r * sin(degToRad(azimuth));
+    curr_x = center_x + r * cos(posAngle);
+    curr_y = center_y + r * sin(posAngle);
 }
 
 void UAV::computeCenter(const double r) {
@@ -38,11 +39,24 @@ void UAV::computeCenter(const double r) {
     centerComputed = true;
 }
 
+double UAV::angleDifferenceToTarget() const {
+    // Compute angle from person to point
+    double dx = target_x - curr_x;
+    double dy = target_y - curr_y;
+    double targetAngle = atan2(dy, dx) * 180.0 / PI; // atan2 returns [-180,180]
+    targetAngle = normalizeAngle(targetAngle);
+
+    // Difference from current azimuth
+    double diff = normalizeAngle(targetAngle - azimuth);
+
+    return diff; // 0–360 degrees, clockwise positive
+}
+
 UAV::UAV(const SimParams &params, const int id)
     : id(id), curr_x(params.x0), curr_y(params.y0), curr_z(params.z0),
       v0(params.v0), minRadius(params.r0), azimuth(params.az),
       target_x(params.x0), target_y(params.y0),
-      state(CIRCLINGAFTERTARGET), centerComputed(false) {
+      state(CIRCLINGAFTERTARGET), centerComputed(false), passed(false) {
     updateVelocity();
     std::string filename = "UAV" + std::to_string(id) + ".txt";
     outFile.open(filename);
@@ -98,6 +112,7 @@ void UAV::update(const double dt) {
         */
         std::cout << "entered state NEWTARGET" << std::endl;
         exit(1);
+        break;
     case CIRCLINGAFTERTARGET:
         /* if (encounter in middle of dt) { // complex solution
             calculate dt split
@@ -106,20 +121,23 @@ void UAV::update(const double dt) {
             update(last part of dt)
             return;
         }*/ 
-        /*if (target is 45 degre infront) // simple solution
-        {
+       moveCircle(dt, minRadius);
+
+       if (fabs(angleDifferenceToTarget() - 135.0) < TOLERANCE) {
             state = ENTERINGCIRCLE;
             centerComputed = false;
-        }*/
-        moveCircle(dt, minRadius);
+       }
+       break;
     case ENTERINGCIRCLE:
         /*if (distance from target == minRadius) {
             state == CIRCLING
         }*/
 
         moveStraight(dt);
+        break;
     case CIRCLING:
         moveCircle(dt, minRadius);
+        break;
     default:
         std::cout << "entered non-existing state" << std::endl;
         break;
