@@ -34,3 +34,6 @@ File name example: UAV1.txt for the first vehicle.
 * On each iteration a new line will be added to each file.  
 The line will be in the following format: time x y azimuth  
 * Each number will be a floating point with 2 integers after the dot  
+
+## Notes
+* Azimuth 0.0 is pointing right. can be changed in func updateVelocity

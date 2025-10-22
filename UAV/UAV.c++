@@ -28,8 +28,7 @@ void UAV::moveCircle(const double dt, const double r) {
     double posAngle = degToRad(azimuth - 90);
 
     // Move along circle path
-    curr_x = center_x + r * cos(posAngle);
-    curr_y = center_y + r * sin(posAngle);
+    moveStraight(dt);
 }
 
 void UAV::computeCenter(const double r) {
@@ -40,16 +39,13 @@ void UAV::computeCenter(const double r) {
 }
 
 double UAV::angleDifferenceToTarget() const {
-    // Compute angle from person to point
-    double dx = target_x - curr_x;
-    double dy = target_y - curr_y;
-    double targetAngle = atan2(dy, dx) * 180.0 / PI; // atan2 returns [-180,180]
-    targetAngle = normalizeAngle(targetAngle);
+    // Compute angle from UAV to target
+    double dx = curr_x - target_x;
+    double dy = curr_y - target_y;
+    double targetAngle = normalizeAngle(radToDeg(atan2(dy, dx)));
 
     // Difference from current azimuth
-    double diff = normalizeAngle(targetAngle - azimuth);
-
-    return diff; // 0–360 degrees, clockwise positive
+    return normalizeAngle(targetAngle - azimuth); // 0–360 degrees, clockwise positive
 }
 
 UAV::UAV(const SimParams &params, const int id)
@@ -91,7 +87,7 @@ void UAV::setTarget(double tx, double ty) {
     state = NEWTARGET;
 }
 
-// currently only works in a straight line TODO: add complexity
+// stages CIRCLINGAFTERTARGET and CIRCLING
 void UAV::update(const double dt) {
     switch (state) {
     case NEWTARGET:
@@ -127,6 +123,7 @@ void UAV::update(const double dt) {
             state = ENTERINGCIRCLE;
             centerComputed = false;
        }
+
        break;
     case ENTERINGCIRCLE:
         /*if (distance from target == minRadius) {
@@ -134,6 +131,7 @@ void UAV::update(const double dt) {
         }*/
 
         moveStraight(dt);
+        
         break;
     case CIRCLING:
         moveCircle(dt, minRadius);
