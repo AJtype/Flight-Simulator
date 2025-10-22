@@ -5,7 +5,8 @@
 void check_UAVConstructor();
 void check_multiple_UAVConstructors();
 void check_setTarget();
-void check_loop();
+void check_basicLoop();
+void check_loopWithCmds();
 
 int main() {
     // check_UAVConstructor();
@@ -14,7 +15,9 @@ int main() {
 
     // check_setTarget();
 
-    check_loop();
+    // check_basicLoop();
+
+    check_loopWithCmds();
 
     return 0;
 }
@@ -89,7 +92,7 @@ void check_setTarget() {
     std::cout << "\n---end of set_target test---\n" << std::endl;
 }
 
-void check_loop() {
+void check_basicLoop() {
     std::string paramsFile("../SimParams.ini");
     SimParams params;
     std::vector<UAV> drones;
@@ -107,6 +110,48 @@ void check_loop() {
     // Simulation loop
     double currentTime = 0.0;
     while (currentTime <= params.timeLim) {
+        // Update all UAVs
+        for (auto &uav : drones) {
+            uav.update(params.dt);
+            uav.writeOutput(currentTime);
+        } currentTime += params.dt;
+    }
+    
+    std::cout << "\n---end of main loop test---\n" << std::endl;
+}
+
+void check_loopWithCmds() {
+    std::string paramsFile("../SimParams.ini");
+    std::string file("../SimCmds.txt");
+    SimParams params;
+    std::vector<UAV> drones;
+    std::vector<Command> commands;
+
+    std::cout << "\n---testing main loop---\n" << std::endl;
+
+    parseSimParams(paramsFile, params);
+    parseCommands(file, commands);
+
+    // initialize UAVs
+    drones.reserve(params.nUav); // avoid vector reallocation
+    for (size_t i = 0; i < params.nUav; i++) {
+        drones.emplace_back(params, i);
+    }
+
+    // Simulation loop
+    double currentTime = 0.0;
+    size_t cmdIndex = 0;
+    while (currentTime <= params.timeLim) {
+        while (cmdIndex < commands.size() && 
+         commands[cmdIndex].time <= currentTime) {
+            int uavId = commands[cmdIndex].uavId;
+            if (uavId < 0 || uavId >= params.nUav)
+                std::cout << "invalid ID";
+            else
+                drones[uavId].setTarget(commands[cmdIndex].target.x, commands[cmdIndex].target.y);
+            cmdIndex++;
+        }
+
         // Update all UAVs
         for (auto &uav : drones) {
             uav.update(params.dt);
