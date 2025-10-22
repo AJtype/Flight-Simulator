@@ -79,7 +79,51 @@ void UAV::setTarget(double tx, double ty) {
 
 // currently only works in a straight line TODO: add complexity
 void UAV::update(const double dt) {
-    moveCircle(dt, minRadius);
+    switch (state) {
+    case NEWTARGET:
+        /* if (encounter in middle of dt) {
+            calculate rest of dt
+            update(first part of dt)
+            state = CIRCLINGAFTERTARGET;
+            update(last part of dt)
+            return;
+        }*/
+        /*
+        if (aiming at target) {
+            centerComputed = false;
+            moveStraight(dt);
+            return;
+        }
+        moveCircle(dt, minRadius);
+        */
+        std::cout << "entered state NEWTARGET" << std::endl;
+        exit(1);
+    case CIRCLINGAFTERTARGET:
+        /* if (encounter in middle of dt) { // complex solution
+            calculate dt split
+            update(first part of dt)
+            state = ENTERINGCIRCLE;
+            update(last part of dt)
+            return;
+        }*/ 
+        /*if (target is 45 degre infront) // simple solution
+        {
+            state = ENTERINGCIRCLE;
+            centerComputed = false;
+        }*/
+        moveCircle(dt, minRadius);
+    case ENTERINGCIRCLE:
+        /*if (distance from target == minRadius) {
+            state == CIRCLING
+        }*/
+
+        moveStraight(dt);
+    case CIRCLING:
+        moveCircle(dt, minRadius);
+    default:
+        std::cout << "entered non-existing state" << std::endl;
+        break;
+    }
 }
 
 void UAV::writeOutput(const double time) {
