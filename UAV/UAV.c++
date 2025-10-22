@@ -74,7 +74,7 @@ void UAV::print() const {
     std::cout << "UAV.minRadius = " << minRadius << std::endl;
     std::cout << "UAV.velocity = " << v0 << std::endl;
     std::cout << "UAV.vx = " << vx << "\tUAV,vy = " << vy << std::endl;
-    std::cout << "UAV.isCircling = " << state << std::endl;
+    std::cout << "UAV.state = " << state << std::endl;
 }
 
 int UAV::getId() const {
@@ -99,15 +99,15 @@ void UAV::update(const double dt) {
             return;
         }*/
         /*
-        if (aiming at target) {
+        if (fabs(angleDifferenceToTarget() - 0.0) < TOLERANCE) {
             centerComputed = false;
             moveStraight(dt);
-            return;
+            break;
         }
         moveCircle(dt, minRadius);
         */
         std::cout << "entered state NEWTARGET" << std::endl;
-        exit(1);
+        state = CIRCLING;
         break;
     case CIRCLINGAFTERTARGET:
         /* if (encounter in middle of dt) { // complex solution

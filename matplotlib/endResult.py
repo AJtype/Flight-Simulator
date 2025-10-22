@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 
 # Read file
 xs, ys = [], []
-with open("../UAV/UAV0.txt", "r") as f:
+# with open("../UAV/UAV0.txt", "r") as f:
+with open("../UAV0.txt", "r") as f:
     for line in f:
         t, x, y, azi = map(float, line.split())
         xs.append(x)

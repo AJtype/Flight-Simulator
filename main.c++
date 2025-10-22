@@ -9,10 +9,10 @@ int main() {
     std::vector<UAV> drones;
 
     // Parse
-    if (!parseSimParams("../SimCmds.txt", params)) {
+    if (!parseSimParams("SimParams.ini", params)) {
         std::cout << "error with SimParams.ini" << std::endl;
         return 1;
-    } if (!parseCommands("../SimParams.ini", commands)) {
+    } if (!parseCommands("SimCmds.txt", commands)) {
         std::cout << "error with SimCmds.txt" << std::endl;
         return 1;
     }
@@ -23,7 +23,7 @@ int main() {
         drones.emplace_back(params, i);
     }
 
-    for (double currentTime = 0.0; currentTime <= params.timeLim; currentTime <= params.timeLim) {
+    for (double currentTime = 0.0; currentTime <= params.timeLim; currentTime += params.dt) {
         for (auto &uav : drones) {
             uav.update(params.dt);
             uav.writeOutput(currentTime);
