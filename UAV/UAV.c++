@@ -24,8 +24,7 @@ void UAV::moveCircle(const double dt, const double r) {
     azimuth = normalizeAngle(azimuth + radToDeg(angularV * dt));
 
     // Update velocity vectors
-    vx = v0 * cos(degToRad(azimuth));
-    vy = v0 * sin(degToRad(azimuth));
+    updateVelocity();
 
     // Move along circle path
     curr_x = center_x + r * cos(degToRad(azimuth));
@@ -43,7 +42,7 @@ UAV::UAV(const SimParams &params, const int id)
     : id(id), curr_x(params.x0), curr_y(params.y0), curr_z(params.z0),
       v0(params.v0), minRadius(params.r0), azimuth(params.az),
       target_x(params.x0), target_y(params.y0),
-      isCircling(true), centerComputed(false) {
+      state(CIRCLINGAFTERTARGET), centerComputed(false) {
     updateVelocity();
     std::string filename = "UAV" + std::to_string(id) + ".txt";
     outFile.open(filename);
@@ -65,18 +64,17 @@ void UAV::print() const {
     std::cout << "UAV.minRadius = " << minRadius << std::endl;
     std::cout << "UAV.velocity = " << v0 << std::endl;
     std::cout << "UAV.vx = " << vx << "\tUAV,vy = " << vy << std::endl;
-    std::cout << "UAV.isCircling = " << isCircling << std::endl;
+    std::cout << "UAV.isCircling = " << state << std::endl;
 }
 
 int UAV::getId() const {
     return id;
 }
 
-void UAV::setTarget(double tx, double ty)
-{
+void UAV::setTarget(double tx, double ty) {
     target_x = tx;
     target_y = ty;
-    isCircling = false;
+    state = NEWTARGET;
 }
 
 // currently only works in a straight line TODO: add complexity

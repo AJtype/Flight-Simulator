@@ -8,6 +8,13 @@
 #include <cmath>
 #include <iomanip>
 
+enum StateOption {
+    NEWTARGET = 0,
+    CIRCLINGAFTERTARGET = 1,
+    ENTERINGCIRCLE = 2,
+    CIRCLING = 3
+};
+
 class UAV { // TODO
 private:
     size_t id; // TODO: UAV should assign his own ID
@@ -23,7 +30,7 @@ private:
     double minRadius; // currently doesn't change
     double v0; // currently doesn't change // TODO: might change with vx and vy
     double vx, vy;
-    bool isCircling;
+    StateOption state;
 
     bool centerComputed;
     double center_x, center_y;
