@@ -87,7 +87,7 @@ void UAV::setTarget(double tx, double ty) {
     state = NEWTARGET;
 }
 
-// stages CIRCLINGAFTERTARGET and CIRCLING
+// stages CIRCLINGAFTERTARGET and CIRCLING and ENTERINGCIRCLE are complete
 void UAV::update(const double dt) {
     switch (state) {
     case NEWTARGET:
@@ -126,11 +126,11 @@ void UAV::update(const double dt) {
 
        break;
     case ENTERINGCIRCLE:
-        /*if (distance from target == minRadius) {
-            state == CIRCLING
-        }*/
-
         moveStraight(dt);
+
+        if (fabs(calcDistance(curr, target) - minRadius) < TOLERANCE*2.2) {
+            state = CIRCLING;
+        }
         
         break;
     case CIRCLING:
