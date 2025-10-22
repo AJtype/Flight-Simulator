@@ -29,6 +29,9 @@ private:
 
     void updateVelocity();
 
+    void moveStraight(const double dt);
+    void moveCircle(const double dt);
+
 public:
     UAV(const SimParams &params, const int id);
     UAV(UAV&&) = default; // allow moving
