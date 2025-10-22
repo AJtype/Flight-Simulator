@@ -25,12 +25,17 @@ private:
     double vx, vy;
     bool isCircling;
 
+    bool centerComputed;
+    double center_x, center_y;
+
     std::ofstream outFile;
 
     void updateVelocity();
 
     void moveStraight(const double dt);
-    void moveCircle(const double dt);
+    void moveCircle(const double dt, const double r);
+
+    void computeCenter(const double r);
 
 public:
     UAV(const SimParams &params, const int id);
