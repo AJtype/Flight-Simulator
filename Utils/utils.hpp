@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 const double PI = 3.14159265358979323846;
 
@@ -21,3 +22,5 @@ double radToDeg(const double rad);
 
 // Normalize angle to (0 - 360)
 double normalizeAngle(double angle);
+
+double calcDistance(const Point& here, const Point& there);

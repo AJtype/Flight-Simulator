@@ -23,3 +23,9 @@ double normalizeAngle(double angle) {
     while (angle >= 360.0) angle -= 360.0;
     return angle;
 }
+
+double calcDistance(const Point& here, const Point& there) {
+    double dx = here.x - there.x;
+    double dy = here.y - there.y;
+    return std::sqrt(dx * dx + dy * dy);
+}

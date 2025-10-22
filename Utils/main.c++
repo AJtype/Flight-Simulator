@@ -1,8 +1,10 @@
 #include "utils.hpp"
+#include <assert.h>
 
 void testDegToRad();
 void testRadToDeg();
 void testNormalizeAngle();
+void testCalcDistance();
 
 int main() {
     testDegToRad();
@@ -10,6 +12,8 @@ int main() {
     testRadToDeg();
 
     testNormalizeAngle();
+
+    testCalcDistance();
 
     return 0;
 }
@@ -58,5 +62,36 @@ void testNormalizeAngle() {
     if (90.0 != normalizeAngle(450.0))
         std::cout << "FAILED on normalizeAngle(450.0)" << std::endl;
     
+    std::cout << "\n---end of normalizeAngle test---\n" << std::endl;
+}
+
+void testCalcDistance() {
+    std::cout << "\n---testing normalizeAngle func---\n" << std::endl;
+    
+    // Test 1: Distance between the same point should be 0
+    Point a{0, 0};
+    Point b{0, 0};
+    assert(calcDistance(a, b) == 0.0);
+
+    // Test 2: Distance along x-axis
+    Point c{3, 0};
+    Point d{0, 0};
+    assert(calcDistance(c, d) == 3.0);
+
+    // Test 3: Distance along y-axis
+    Point e{0, 4};
+    Point f{0, 0};
+    assert(calcDistance(e, f) == 4.0);
+
+    // Test 4: Distance diagonally (3-4-5 triangle)
+    Point g{3, 4};
+    Point h{0, 0};
+    assert(calcDistance(g, h) == 5.0);
+
+    // Test 5: Distance between arbitrary points
+    Point i{1.5, 2.5};
+    Point j{4.5, 6.5};
+    assert(std::abs(calcDistance(i, j) - 5.0) < 1e-9); // use epsilon for floating point
+
     std::cout << "\n---end of normalizeAngle test---\n" << std::endl;
 }
