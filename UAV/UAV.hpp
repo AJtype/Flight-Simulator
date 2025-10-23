@@ -8,7 +8,9 @@
 #include <cmath>
 #include <iomanip>
 
-constexpr double TOLERANCE = 0.02;
+constexpr double DEGREE_TOLERANCE = 0.02;
+constexpr double DISTANCE_TOLERANCE = 0.05;
+constexpr double ENTRY_ANGLE_DEG = 45.0;
 
 enum StateOption {
     NEWTARGET = 0,
@@ -32,21 +34,9 @@ private:
     double vx, vy;
     StateOption state;
 
-    bool centerComputed;
-    Point center;
-
     std::ofstream outFile;
     
-    /**
-     * @brief Computes the center of a circular path for clockwise UAV motion.
-     *
-     * @param r The radius of the desired circular path.
-     *
-     * @note
-     * - TODO: add option for counterclockwise circle using negetive r
-     * - The UAV's current azimuth (`azimuth`) is assumed to be in degrees.
-     */
-    void computeCenter(const double r);
+    // helper funcs
 
     /**
      * @brief Calculates the angular difference between the UAV's heading and the target.
@@ -85,6 +75,7 @@ private:
     void moveCircle(const double dt, const double r);
 
 public:
+    // constructors and destructor
     /**
      * @brief Constructs a UAV object with initial simulation parameters.
      * @param params a SimParams struct containing the UAV's initial state
@@ -101,10 +92,36 @@ public:
     UAV(const UAV&) = delete; // disable copying
     ~UAV();
 
+    /**
+     * @brief Sets a new target for the UAV
+     * @param t the coordinants of the new target
+     *
+     * @note
+     * - Changes to state to NEWTARGET
+     * - makes centerComputed false, because the UAV will start flying straight
+     */
+    void setTarget(const Point& t);
+
+    /**
+     * @brief Updates the UAV's position and angle according to the state and delta time.
+     * The function uses tolerances to handle simulation jumps (`DEGREE_TOLERANCE`
+     * and `DISTANCE_TOLERANCE`)
+     * @param dt The elapsed simulation time (seconds) for this update step.
+     * @throws std::out_of_range if the UAV enters an invalid, undefined state.
+     */
+    void update(const double dt);
+
+    /**
+     * @brief Writes the UAV's current location and direction to the output file.
+     * The output format is:
+     * <time> <x> <y> <azimuth>\n
+     * Example:
+     * 12.50 103.42  88.10  270.00
+     * @param time The current simulation time to record (in seconds).
+     */
+    void writeOutput(const double time);
+
+    // test funcs
     void print() const;
     int getId() const;
-
-    void setTarget(const Point& t);
-    void update(const double dt);
-    void writeOutput(const double time);
 };

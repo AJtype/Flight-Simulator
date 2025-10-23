@@ -8,8 +8,7 @@ UAV::UAV(const SimParams& params, const int id)
       minRadius(params.r0),
       azimuth(params.az),
       target{params.start.x, params.start.y},
-      state(CIRCLINGAFTERTARGET),
-      centerComputed(false) {
+      state(CIRCLINGAFTERTARGET) {
     updateVelocity();
 
     std::string filename = "UAV" + std::to_string(id) + ".txt";
@@ -21,13 +20,6 @@ UAV::UAV(const SimParams& params, const int id)
 UAV::~UAV() {
     if (outFile.is_open())
         outFile.close();
-}
-
-void UAV::computeCenter(const double r) {
-    double angle_rad = degToRad(azimuth + 90.0); // 90° to the right for CW center
-    center.x = curr.x + r * cos(angle_rad);
-    center.y = curr.y + r * sin(angle_rad);
-    centerComputed = true;
 }
 
 double UAV::angleDifferenceToTarget() const {
@@ -52,11 +44,6 @@ void UAV::moveStraight(const double dt) {
 }
 
 void UAV::moveCircle(const double dt, const double r) {
-    // Compute center of circle
-    if (!centerComputed) {
-        computeCenter(r);
-    }
-
     // Angular velocity (negative for CW)
     double angularV = -v0 / r;
 
@@ -66,6 +53,60 @@ void UAV::moveCircle(const double dt, const double r) {
 
     // Move along circle path
     moveStraight(dt);
+}
+
+void UAV::setTarget(const Point& t) {
+    target = t;
+    state = NEWTARGET;
+}
+
+void UAV::update(const double dt) {
+    switch (state) {
+    case NEWTARGET:
+        if (fabs(angleDifferenceToTarget()) > DEGREE_TOLERANCE) { // if not looking at target
+            moveCircle(dt, minRadius);
+            break;
+        } // else (looking at target)
+        moveStraight(dt);
+        
+        // check if got to target
+        if (calcDistance(curr, target) < DISTANCE_TOLERANCE) { // can miss because of jumps (dt) and TOLERANCE
+            state = CIRCLINGAFTERTARGET;
+        }
+        
+        break;
+    case CIRCLINGAFTERTARGET: // do 3/4 circle to head toward circle around target
+       moveCircle(dt, minRadius);
+
+        // check if ready to enter circle
+       if (fabs(angleDifferenceToTarget() - ENTRY_ANGLE_DEG) < DEGREE_TOLERANCE) { // can miss because of jumps (dt) and TOLERANCE
+            state = ENTERINGCIRCLE;
+       }
+
+       break;
+    case ENTERINGCIRCLE: // enter circle around target
+        moveStraight(dt);
+
+        // check if entered circle (at radius distance from the center)
+        if (fabs(calcDistance(curr, target) - minRadius) < DISTANCE_TOLERANCE) { // can miss because of jumps (dt) and TOLERANCE
+            state = CIRCLING;
+        }
+        
+        break;
+    case CIRCLING: // circle around target :D
+        moveCircle(dt, minRadius);
+        break;
+    default:
+        throw std::out_of_range("UAV non-existing state");
+        break;
+    }
+}
+
+void UAV::writeOutput(const double time) {
+    if (!outFile.is_open())
+        return;
+    outFile << std::fixed << std::setprecision(2)
+        << time << " " << curr.x << " " << curr.y << " " << azimuth << "\n";
 }
 
 void UAV::print() const {
@@ -84,77 +125,4 @@ void UAV::print() const {
 
 int UAV::getId() const {
     return id;
-}
-
-void UAV::setTarget(const Point& t) {
-    target = t;
-    state = NEWTARGET;
-    centerComputed = false;
-}
-
-// stages CIRCLINGAFTERTARGET and CIRCLING and ENTERINGCIRCLE are complete
-void UAV::update(const double dt) {
-    switch (state) {
-    case NEWTARGET:
-        /* if (encounter in middle of dt) {
-            calculate rest of dt
-            update(first part of dt)
-            state = CIRCLINGAFTERTARGET;
-            update(last part of dt)
-            return;
-        }*/
-
-        if (!(fabs(angleDifferenceToTarget()) < TOLERANCE)) { // if not looking at target
-            moveCircle(dt, minRadius);
-            break;
-        } // else (looking at target)
-        centerComputed = false;
-        moveStraight(dt);
-        
-        // check if got to target
-        if (calcDistance(curr, target) < TOLERANCE*2.3) { // can miss if the simulates runs for a long time
-            state = CIRCLINGAFTERTARGET;
-            std::cout << "got to point" << std::endl;
-        }
-        
-        break;
-    case CIRCLINGAFTERTARGET:
-        /* if (encounter in middle of dt) { // complex solution
-            calculate dt split
-            update(first part of dt)
-            state = ENTERINGCIRCLE;
-            update(last part of dt)
-            return;
-        }*/ 
-       moveCircle(dt, minRadius);
-
-       if (fabs(angleDifferenceToTarget() - 45.0) < TOLERANCE) { // check if ready to enter circle
-            state = ENTERINGCIRCLE;
-            centerComputed = false;
-       }
-
-       break;
-    case ENTERINGCIRCLE:
-        moveStraight(dt);
-
-        // check if entered circle (at radius distance from the center)
-        if (fabs(calcDistance(curr, target) - minRadius) < TOLERANCE*2.2) {
-            state = CIRCLING;
-        }
-        
-        break;
-    case CIRCLING:
-        moveCircle(dt, minRadius);
-        break;
-    default:
-        std::cout << "entered non-existing state" << std::endl;
-        break;
-    }
-}
-
-void UAV::writeOutput(const double time) {
-    if (outFile.is_open()) {
-        outFile << std::fixed << std::setprecision(2)
-            << time << " " << curr.x << " " << curr.y << " " << azimuth << "\n";
-    }
 }
