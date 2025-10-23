@@ -72,7 +72,7 @@ g++ .\utilsTests.c++ ..\src\Utils\utils.c++
         Call update again with the right amount of dt to get to the target. Than change to the next state.  
         Than call update again with the remaining dt.  
         it will look something like this:  
-```C++  
+``` C++  
 if (get to target before end of dt)  
    double remainingDt = calcTimeToGetToTarget();  
    update(dt - remainingDt);  
@@ -80,4 +80,3 @@ if (get to target before end of dt)
    update(remainingDt);  
    break;  
 ```
-      "I didnt do this solution out of time constraints."
