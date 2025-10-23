@@ -6,7 +6,7 @@ from there, they will start to circle the point at a specific distance from the 
 ## Input
 The system will read from 2 files called SimParams.ini and SimCmds.txt  
 
-## Params
+### Params
 The params will include:  
 1. Dt - The time between iterations  
 2. N_uav - The amount of UAVs to simulate  
@@ -37,7 +37,7 @@ The line will be in the following format: time x y azimuth
 * Each number will be a floating point with 2 integers after the dot 
 * The output files can be animated using the python scripts.   
 
-## Show Course
+### Show Course
 To path of the UAVs you can use the python scripts.  
 To show the final result of the path, use endResult.py:  
 python .\endResult.py  
@@ -79,5 +79,5 @@ if (get to target before end of dt)
    state = NEXTSTATE // not a real state  
    update(remainingDt);  
    break;  
-```  
+```
       I didnt do this solution out of time constraints.
