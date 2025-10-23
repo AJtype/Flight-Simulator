@@ -3,6 +3,16 @@ This project will simulate the flight of multiple UAVs circling a point.
 The UAVs will all start from a given location and fly to the center of the circle. 
 from there, they will start to circle the point at a specific distance from the point.  
 
+## Pathing Explanation  
+The UAV do 3 quarters of a circle and than fly straight for a lenght equal to the radius.  
+Now the UAV is a distance from target equal to the radius, and it is 90 degrees from it, the perfect place to start the circle.  
+Now it simply starts moving in a circle around the target.  
+
+### New Command
+When the UAV gets a command it will start turning in a circle (clockwise) until it is facing the target location.
+Than it will simply fly straight until it gets there.
+afterwards, to enter the correct circle, it will repeat the pathing it did at the beginning of the program (see Pathing Explanation)
+
 ## Input
 The system will read from 2 files called SimParams.ini and SimCmds.txt  
 
