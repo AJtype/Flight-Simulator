@@ -109,14 +109,34 @@ bool parseCommands(const std::string &filename, std::vector<Command> &commands) 
     }
 
     Command cmd;
-    while (file >> cmd.time >> cmd.uavId >> cmd.target.x >> cmd.target.y) {
+    size_t lineNumber = 0;
+    while (file >> cmd.time >> cmd.uavId >> cmd.target.x >> cmd.target.y) { // Can fail silently
+        ++lineNumber;
+
+        // Validate command values
+        if (cmd.time < 0) {
+            std::cerr << "Error: Command time must be non-negative at line " << lineNumber << std::endl;
+            return false;
+        }
+        if (cmd.uavId < 0) {
+            std::cerr << "Error: UAV ID cannot be negative at line " << lineNumber << std::endl;
+            return false;
+        }
+
         commands.push_back(cmd);
     }
+
+    // Check if the loop exited due to a format error (not EOF)
+    if (!file.eof()) { // Catches if the previous while was exited early
+        std::cerr << "Error: Invalid command format at line " << (lineNumber + 1) << std::endl;
+        return false;
+    }
+
     file.close();
 
     // Sort commands by time
     std::sort(commands.begin(), commands.end(),
               [](const Command& a, const Command& b) { return a.time < b.time; });
-    
+
     return true;
 }
