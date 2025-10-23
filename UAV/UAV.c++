@@ -100,14 +100,12 @@ void UAV::update(const double dt) {
             return;
         }*/
 
-        // check if looking at target
-        if (!(fabs(angleDifferenceToTarget() - 180.0) < TOLERANCE)) {
+        if (!(fabs(angleDifferenceToTarget() - 180.0) < TOLERANCE)) { // if not looking at target
             moveCircle(dt, minRadius);
             break;
-        }
+        } // else (looking at target)
         centerComputed = false;
         moveStraight(dt);
-        // std::cout << "distance = " << calcDistance(curr, target) << std::endl;
         
         // check if got to target
         if (calcDistance(curr, target) < TOLERANCE*2.3) { // can miss if the simulates runs for a long time
@@ -126,7 +124,7 @@ void UAV::update(const double dt) {
         }*/ 
        moveCircle(dt, minRadius);
 
-       if (fabs(angleDifferenceToTarget() - 135.0) < TOLERANCE) {
+       if (fabs(angleDifferenceToTarget() - 135.0) < TOLERANCE) { // check if ready to enter circle
             state = ENTERINGCIRCLE;
             centerComputed = false;
        }
@@ -135,6 +133,7 @@ void UAV::update(const double dt) {
     case ENTERINGCIRCLE:
         moveStraight(dt);
 
+        // check if entered circle (at radius distance from the center)
         if (fabs(calcDistance(curr, target) - minRadius) < TOLERANCE*2.2) {
             state = CIRCLING;
         }
