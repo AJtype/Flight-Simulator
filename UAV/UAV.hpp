@@ -17,16 +17,16 @@ enum StateOption {
     CIRCLING = 3
 };
 
-class UAV { // TODO
+class UAV {
 private:
     size_t id; // TODO: UAV should assign his own ID
     
     Point curr;
-    double curr_z;
+    double curr_z; // currently doesn't change
 
     Point target;
 
-    double azimuth; // saved in degrees
+    double azimuth; // saved in degrees, compared to x axis
     double minRadius; // currently doesn't change
     double v0; // currently doesn't change
     double vx, vy;
@@ -34,8 +34,6 @@ private:
 
     bool centerComputed;
     Point center;
-
-    bool passed;
 
     std::ofstream outFile;
     
@@ -87,6 +85,16 @@ private:
     void moveCircle(const double dt, const double r);
 
 public:
+    /**
+     * @brief Constructs a UAV object with initial simulation parameters.
+     * @param params a SimParams struct containing the UAV's initial state
+     * @param id     Unique identifier for the UAV (used for logging and identification)
+     *
+     * @throws std::runtime_error if the output file cannot be opened.
+     *
+     * @note
+     * - The UAV starts in the `CIRCLINGAFTERTARGET` state
+     */
     UAV(const SimParams& params, const int id);
     UAV(UAV&&) = default; // allow moving
     UAV& operator=(UAV&&) = default;
@@ -95,8 +103,8 @@ public:
 
     void print() const;
     int getId() const;
-    void setTarget(const double tx, const double ty);
 
+    void setTarget(const Point& t);
     void update(const double dt);
     void writeOutput(const double time);
 };

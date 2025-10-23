@@ -80,7 +80,8 @@ void check_setTarget() {
         drones.emplace_back(params, i);
     }
 
-    drones[0].setTarget(10, 10.5);
+    Point newTarget = {10, 10.5};
+    drones[0].setTarget(newTarget);
 
     // print UAVs params
     for (size_t i = 0; i < params.nUav; i++) {
@@ -148,7 +149,7 @@ void check_loopWithCmds() {
             if (uavId < 0 || uavId >= params.nUav)
                 std::cout << "invalid ID";
             else
-                drones[uavId].setTarget(commands[cmdIndex].target.x, commands[cmdIndex].target.y);
+                drones[uavId].setTarget(commands[cmdIndex].target);
             cmdIndex++;
         }
 

@@ -1,6 +1,6 @@
 #include "UAV.hpp"
 
-UAV::UAV(const SimParams &params, const int id)
+UAV::UAV(const SimParams& params, const int id)
     : id(id), 
       curr{params.start.x, params.start.y},
       curr_z(params.z0),
@@ -9,8 +9,7 @@ UAV::UAV(const SimParams &params, const int id)
       azimuth(params.az),
       target{params.start.x, params.start.y},
       state(CIRCLINGAFTERTARGET),
-      centerComputed(false),
-      passed(false) {
+      centerComputed(false) {
     updateVelocity();
 
     std::string filename = "UAV" + std::to_string(id) + ".txt";
@@ -65,9 +64,6 @@ void UAV::moveCircle(const double dt, const double r) {
     azimuth = normalizeAngle(azimuth + radToDeg(angularV * dt));
     updateVelocity();
 
-    // Position angle is 90° offset from heading (CW flight)
-    double posAngle = degToRad(azimuth - 90);
-
     // Move along circle path
     moveStraight(dt);
 }
@@ -90,9 +86,8 @@ int UAV::getId() const {
     return id;
 }
 
-void UAV::setTarget(const double tx, const double ty) {
-    target.x = tx;
-    target.y = ty;
+void UAV::setTarget(const Point& t) {
+    target = t;
     state = NEWTARGET;
     centerComputed = false;
 }

@@ -32,7 +32,7 @@ bool parseSimParams(const std::string &filename, SimParams &params) {
         if (line.empty() || line[0] == '#') continue;
 
         size_t pos = line.find('=');
-        if (pos == std::string::npos) continue; // no equal sign found // TODO: add error handling
+        if (pos == std::string::npos) continue; // no equal sign found
 
         // Split into key and value
         std::string key = line.substr(0, pos);
@@ -52,6 +52,9 @@ bool parseSimParams(const std::string &filename, SimParams &params) {
         else if (key == "Az") params.az = std::stod(value);
         else if (key == "TimeLim") params.timeLim = std::stod(value);
     }
+
+    if (file.is_open())
+        file.close();
 
     return true;
 }

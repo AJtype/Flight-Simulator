@@ -24,7 +24,7 @@ int main() {
     }
 
     for (double currentTime = 0.0; currentTime <= params.timeLim; currentTime += params.dt) {
-        for (auto &uav : drones) {
+        for (auto& uav : drones) {
             uav.update(params.dt);
             uav.writeOutput(currentTime);
         }
