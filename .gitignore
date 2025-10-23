@@ -1,4 +1,5 @@
 .vscode
+UAV*.txt
 
 # Prerequisites
 *.d
