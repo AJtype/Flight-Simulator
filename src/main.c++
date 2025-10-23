@@ -25,11 +25,12 @@ int main() {
 
     size_t cmdIndex = 0;
     for (double currentTime = 0.0; currentTime <= params.timeLim; currentTime += params.dt) {
+        // commands
         while (cmdIndex < commands.size() && 
-         commands[cmdIndex].time <= currentTime) {
+         commands[cmdIndex].time <= currentTime) { // if there are still commands and the next command is now or in the past (because of dt)
             int uavId = commands[cmdIndex].uavId;
             if (uavId < 0 || uavId >= params.nUav)
-                std::cout << "invalid ID";
+                std::cerr << "Invalid UAV ID: " << uavId << std::endl;
             else
                 drones[uavId].setTarget(commands[cmdIndex].target);
             cmdIndex++;
@@ -43,7 +44,7 @@ int main() {
 
     std::cout << "Simulation completed successfully!" << std::endl;
     std::cout << "Output files: ";
-    for (int i = 0; i < params.nUav; ++i) {
+    for (size_t i = 0; i < drones.size(); ++i) {
         std::cout << "UAV" << i << ".txt ";
     }
     std::cout << std::endl;

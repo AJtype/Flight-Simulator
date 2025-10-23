@@ -29,28 +29,70 @@ bool parseSimParams(const std::string &filename, SimParams &params) {
     std::string line;
     while (std::getline(file, line)) {
         // Remove whitespace and ignore blank/comment lines
+        trim(line);
         if (line.empty() || line[0] == '#') continue;
 
         size_t pos = line.find('=');
-        if (pos == std::string::npos) continue; // no equal sign found
+        if (pos == std::string::npos) { // no equal sign found
+            std::cerr << "Warning: Ignoring invalid line (no '='): " << line << std::endl;
+            continue; 
+        }
 
         // Split into key and value
         std::string key = line.substr(0, pos);
         std::string value = line.substr(pos + 1);
-
         trim(key);
         trim(value);
 
         // Assign values (stod = string to double, stoi = string to integer)
-        if (key == "Dt") params.dt = std::stod(value);
-        else if (key == "N_uav") params.nUav = std::stoi(value);
-        else if (key == "R") params.r0 = std::stod(value);
-        else if (key == "X0") params.start.x = std::stod(value);
-        else if (key == "Y0") params.start.y = std::stod(value);
-        else if (key == "Z0") params.z0 = std::stod(value);
-        else if (key == "V0") params.v0 = std::stod(value);
-        else if (key == "Az") params.az = std::stod(value);
-        else if (key == "TimeLim") params.timeLim = std::stod(value);
+        try {
+            if (key == "Dt") {
+                params.dt = std::stod(value);
+                if (params.dt <= 0) throw std::out_of_range("Dt must be positive");
+            }
+            else if (key == "N_uav") {
+                params.nUav = std::stoi(value);
+                if (params.nUav <= 0) throw std::out_of_range("N_uav must be positive");
+            }
+            else if (key == "R") {
+                params.r0 = std::stod(value);
+                if (params.r0 <= 0) throw std::out_of_range("R must be positive");
+            }
+            else if (key == "X0") {
+                params.start.x = std::stod(value);
+            }
+            else if (key == "Y0") {
+                params.start.y = std::stod(value);
+            }
+            else if (key == "Z0") {
+                params.z0 = std::stod(value);
+                if (params.z0 <= 0) throw std::out_of_range("z0 must be positive");
+            }
+            else if (key == "V0") {
+                params.v0 = std::stod(value);
+                if (params.v0 < 0) throw std::out_of_range("V0 cannot be negative");
+            }
+            else if (key == "Az") {
+                params.az = std::stod(value);
+                if (params.az < 0 || params.az >= 360) throw std::out_of_range("Az must be in [0,360]");
+            }
+            else if (key == "TimeLim") {
+                params.timeLim = std::stod(value);
+                if (params.timeLim <= 0) throw std::out_of_range("TimeLim must be positive");
+            }
+            else {
+                std::cerr << "Warning: Unknown key ignored: " << key << std::endl;
+            }
+        }
+        catch (const std::invalid_argument&) {
+            std::cerr << "Error: Invalid value for " << key << ": " << value << std::endl;
+            return false;
+        }
+        catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << key << " out of range: " << value
+                      << " (" << e.what() << ")" << std::endl;
+            return false;
+        }
     }
 
     if (file.is_open())
