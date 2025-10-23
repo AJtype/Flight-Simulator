@@ -40,12 +40,12 @@ void UAV::computeCenter(const double r) {
 
 double UAV::angleDifferenceToTarget() const {
     // Compute angle from UAV to target
-    double dx = curr.x - target.x;
-    double dy = curr.y - target.y;
+    double dx = target.x - curr.x;
+    double dy = target.y - curr.y;
     double targetAngle = normalizeAngle(radToDeg(atan2(dy, dx)));
 
     // Difference from current azimuth
-    return normalizeAngle(targetAngle - azimuth); // 0–360 degrees, clockwise positive
+    return normalizeAngle(azimuth - targetAngle); // 0–360 degrees, clockwise positive
 }
 
 UAV::UAV(const SimParams &params, const int id)
@@ -100,7 +100,7 @@ void UAV::update(const double dt) {
             return;
         }*/
 
-        if (!(fabs(angleDifferenceToTarget() - 180.0) < TOLERANCE)) { // if not looking at target
+        if (!(fabs(angleDifferenceToTarget()) < TOLERANCE)) { // if not looking at target
             moveCircle(dt, minRadius);
             break;
         } // else (looking at target)
@@ -124,7 +124,7 @@ void UAV::update(const double dt) {
         }*/ 
        moveCircle(dt, minRadius);
 
-       if (fabs(angleDifferenceToTarget() - 135.0) < TOLERANCE) { // check if ready to enter circle
+       if (fabs(angleDifferenceToTarget() - 45.0) < TOLERANCE) { // check if ready to enter circle
             state = ENTERINGCIRCLE;
             centerComputed = false;
        }
