@@ -9,10 +9,10 @@ int main() {
     std::vector<UAV> drones;
 
     // Parse
-    if (!parseSimParams("SimParams.ini", params)) {
+    if (!parseSimParams("../SimParams.ini", params)) {
         std::cout << "error with SimParams.ini" << std::endl;
         return 1;
-    } if (!parseCommands("SimCmds.txt", commands)) {
+    } if (!parseCommands("../SimCmds.txt", commands)) {
         std::cout << "error with SimCmds.txt" << std::endl;
         return 1;
     }

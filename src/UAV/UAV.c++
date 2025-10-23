@@ -11,7 +11,7 @@ UAV::UAV(const SimParams& params, const int id)
       state(CIRCLINGAFTERTARGET) {
     updateVelocity();
 
-    std::string filename = "UAV" + std::to_string(id) + ".txt";
+    std::string filename = "../UAV" + std::to_string(id) + ".txt";
     outFile.open(filename);
     if (!outFile.is_open())
         throw std::runtime_error("Failed to open UAV output file: " + filename);
