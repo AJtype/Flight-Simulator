@@ -1,5 +1,22 @@
 #include "UAV.hpp"
 
+void UAV::computeCenter(const double r) {
+    double angle_rad = degToRad(azimuth + 90.0); // 90° to the right for CW center
+    center.x = curr.x + r * cos(angle_rad);
+    center.y = curr.y + r * sin(angle_rad);
+    centerComputed = true;
+}
+
+double UAV::angleDifferenceToTarget() const {
+    // Compute angle from UAV to target
+    double dx = target.x - curr.x;
+    double dy = target.y - curr.y;
+    double targetAngle = normalizeAngle(radToDeg(atan2(dy, dx)));
+
+    // Difference from current azimuth
+    return normalizeAngle(azimuth - targetAngle); // 0–360 degrees, clockwise positive
+}
+
 void UAV::updateVelocity() {
     double azRad = degToRad(azimuth);
     vx = v0 * cos(azRad);
@@ -29,23 +46,6 @@ void UAV::moveCircle(const double dt, const double r) {
 
     // Move along circle path
     moveStraight(dt);
-}
-
-void UAV::computeCenter(const double r) {
-    double angle_rad = degToRad(azimuth + 90.0); // 90° to the right for CW center
-    center.x = curr.x + r * cos(angle_rad);
-    center.y = curr.y + r * sin(angle_rad);
-    centerComputed = true;
-}
-
-double UAV::angleDifferenceToTarget() const {
-    // Compute angle from UAV to target
-    double dx = target.x - curr.x;
-    double dy = target.y - curr.y;
-    double targetAngle = normalizeAngle(radToDeg(atan2(dy, dx)));
-
-    // Difference from current azimuth
-    return normalizeAngle(azimuth - targetAngle); // 0–360 degrees, clockwise positive
 }
 
 UAV::UAV(const SimParams &params, const int id)
