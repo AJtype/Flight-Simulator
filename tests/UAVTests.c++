@@ -1,5 +1,5 @@
-#include "UAV.hpp"
-#include "../Utils/utils.hpp"
+#include "../src/UAV/UAV.hpp"
+#include "../src/Utils/utils.hpp"
 #include <iostream>
 
 void check_UAVConstructor();
@@ -9,13 +9,13 @@ void check_basicLoop();
 void check_loopWithCmds();
 
 int main() {
-    // check_UAVConstructor();
+    check_UAVConstructor();
 
-    // check_multiple_UAVConstructors();
+    check_multiple_UAVConstructors();
 
-    // check_setTarget();
+    check_setTarget();
 
-    // check_basicLoop();
+    check_basicLoop();
 
     check_loopWithCmds();
 

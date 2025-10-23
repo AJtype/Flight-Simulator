@@ -1,4 +1,4 @@
-#include "SimParams.hpp"
+#include "../src/SimParams/SimParams.hpp"
 
 void testParseSimParams();
 void testParseCommands();

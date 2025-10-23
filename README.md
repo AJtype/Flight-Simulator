@@ -37,3 +37,19 @@ The line will be in the following format: time x y azimuth
 
 ## Notes
 * Azimuth 0.0 is pointing right. can be changed in func updateVelocity
+
+## Compilation Lines
+for compiling the whole project from src:  
+g++ .\main.c++ .\UAV\UAV.c++ .\Utils\utils.c++ .\SimParams\SimParams.c++  
+  
+for compiling the whole project from base folder:  
+g++ .\src\main.c++ .\src\UAV\UAV.c++ .\src\Utils\utils.c++ .\src\SimParams\SimParams.c++  
+  
+for compiling SimParamsTests:
+g++ .\SimParamsTests.c++ ..\src\SimParams\SimParams.c++ ..\src\Utils\utils.c++
+
+for compiling UAVTests:
+g++ .\UAVTests.c++ ..\src\UAV\UAV.c++ ..\src\Utils\utils.c++ ..\src\SimParams\SimParams.c++
+
+for compiling utilsTests:
+g++ .\utilsTests.c++ ..\src\Utils\utils.c++

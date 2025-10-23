@@ -23,8 +23,8 @@ struct SimParams {
     void print() const;
 };
 
-// Parse SimParams.ini
+// Parse SimParams.ini from file
 bool parseSimParams(const std::string& filename, SimParams& params);
 
-// Parse SimCmds.txt
+// Parse SimCmds.txt from file
 bool parseCommands(const std::string& filename, std::vector<Command>& commands);
