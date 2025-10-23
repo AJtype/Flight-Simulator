@@ -8,16 +8,17 @@ void check_setTarget();
 void check_basicLoop();
 void check_loopWithCmds();
 
+// more UAV will be created, but only the amount in SimsParams will get the Commands
 int main() {
+    check_loopWithCmds();
+
+    check_basicLoop();
+
     check_UAVConstructor();
 
     check_multiple_UAVConstructors();
 
     check_setTarget();
-
-    check_basicLoop();
-
-    check_loopWithCmds();
 
     return 0;
 }
@@ -31,7 +32,7 @@ void check_UAVConstructor() {
     parseSimParams(paramsFile, params);
 
     // initialize UAV
-    UAV drone(params, 0);
+    UAV drone(params);
 
     // print UAV params
     std::cout << "first drone = " << std::endl;
@@ -52,7 +53,7 @@ void check_multiple_UAVConstructors() {
     // initialize UAVs
     drones.reserve(params.nUav); // avoid vector reallocation
     for (size_t i = 0; i < params.nUav; i++) {
-        drones.emplace_back(params, i);
+        drones.emplace_back(params);
     }
 
     // print UAVs params
@@ -77,7 +78,7 @@ void check_setTarget() {
     // initialize UAVs
     drones.reserve(params.nUav); // avoid vector reallocation
     for (size_t i = 0; i < params.nUav; i++) {
-        drones.emplace_back(params, i);
+        drones.emplace_back(params);
     }
 
     Point newTarget = {10, 10.5};
@@ -105,7 +106,7 @@ void check_basicLoop() {
     // initialize UAVs
     drones.reserve(params.nUav); // avoid vector reallocation
     for (size_t i = 0; i < params.nUav; i++) {
-        drones.emplace_back(params, i);
+        drones.emplace_back(params);
     }
 
     // Simulation loop
@@ -136,7 +137,7 @@ void check_loopWithCmds() {
     // initialize UAVs
     drones.reserve(params.nUav); // avoid vector reallocation
     for (size_t i = 0; i < params.nUav; i++) {
-        drones.emplace_back(params, i);
+        drones.emplace_back(params);
     }
 
     // Simulation loop

@@ -22,6 +22,7 @@ enum StateOption {
 class UAV {
 private:
     size_t id; // TODO: UAV should assign his own ID
+    static size_t nextId;
     
     Point curr;
     double curr_z; // currently doesn't change
@@ -85,14 +86,11 @@ public:
     /**
      * @brief Constructs a UAV object with initial simulation parameters.
      * @param params a SimParams struct containing the UAV's initial state
-     * @param id     Unique identifier for the UAV (used for logging and identification)
-     *
      * @throws std::runtime_error if the output file cannot be opened.
-     *
      * @note
      * - The UAV starts in the `CIRCLINGAFTERTARGET` state
      */
-    UAV(const SimParams& params, const int id);
+    UAV(const SimParams& params);
     UAV(UAV&&) = default; // allow moving
     UAV& operator=(UAV&&) = default;
     UAV(const UAV&) = delete; // disable copying
@@ -101,7 +99,6 @@ public:
     /**
      * @brief Sets a new target for the UAV
      * @param t the coordinants of the new target
-     *
      * @note
      * - Changes to state to NEWTARGET
      * - makes centerComputed false, because the UAV will start flying straight
@@ -121,7 +118,7 @@ public:
      * @brief Writes the UAV's current location and direction to the output file.
      * The output format is:
      * <time> <x> <y> <azimuth>\n
-     * Example:
+     * @example:
      * 12.50 103.42  88.10  270.00
      * @param time The current simulation time to record (in seconds).
      */

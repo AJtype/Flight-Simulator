@@ -20,7 +20,7 @@ int main() {
     // Initialize UAVs
     drones.reserve(params.nUav); // avoid vector reallocation
     for (size_t i = 0; i < params.nUav; i++) {
-        drones.emplace_back(params, i);
+        drones.emplace_back(params);
     }
 
     size_t cmdIndex = 0;

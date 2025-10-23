@@ -1,7 +1,9 @@
 #include "UAV.hpp"
 
-UAV::UAV(const SimParams& params, const int id)
-    : id(id), 
+size_t UAV::nextId = 0;
+
+UAV::UAV(const SimParams& params)
+    : id(nextId++), 
       curr{params.start.x, params.start.y},
       curr_z(params.z0),
       v0(params.v0),
