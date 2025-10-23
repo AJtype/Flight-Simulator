@@ -3,8 +3,8 @@ import matplotlib.animation as animation
 
 # Read file
 times, xs, ys, azimuths = [], [], [], []
-# with open("../UAV/UAV0.txt", "r") as f:
-with open("../UAV0.txt", "r") as f:
+with open("../UAV/UAV1.txt", "r") as f:
+# with open("../UAV0.txt", "r") as f:
     for line in f:
         t, x, y, azi = map(float, line.split())
         times.append(t)

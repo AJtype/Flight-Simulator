@@ -85,6 +85,7 @@ void UAV::setTarget(double tx, double ty) {
     target.x = tx;
     target.y = ty;
     state = NEWTARGET;
+    centerComputed = false;
 }
 
 // stages CIRCLINGAFTERTARGET and CIRCLING and ENTERINGCIRCLE are complete
@@ -98,16 +99,22 @@ void UAV::update(const double dt) {
             update(last part of dt)
             return;
         }*/
-        /*
-        if (fabs(angleDifferenceToTarget() - 0.0) < TOLERANCE) {
-            centerComputed = false;
-            moveStraight(dt);
+
+        // check if looking at target
+        if (!(fabs(angleDifferenceToTarget() - 180.0) < TOLERANCE)) {
+            moveCircle(dt, minRadius);
             break;
         }
-        moveCircle(dt, minRadius);
-        */
-        std::cout << "entered state NEWTARGET" << std::endl;
-        state = CIRCLING;
+        centerComputed = false;
+        moveStraight(dt);
+        // std::cout << "distance = " << calcDistance(curr, target) << std::endl;
+        
+        // check if got to target
+        if (calcDistance(curr, target) < TOLERANCE*2.3) { // can miss if the simulates runs for a long time
+            state = CIRCLINGAFTERTARGET;
+            std::cout << "got to point" << std::endl;
+        }
+        
         break;
     case CIRCLINGAFTERTARGET:
         /* if (encounter in middle of dt) { // complex solution
