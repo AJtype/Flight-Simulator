@@ -72,6 +72,12 @@ private:
      *   current heading and speed. They are **not updated** within this function.
      */
     void moveStraight(const double dt);
+
+    /**
+     * @brief Moves the UAV along a circular path for a given time step.
+     * @param dt The elapsed time (in seconds) over which the UAV moves along the circle.
+     * @param r  The radius of the circular path.
+     */
     void moveCircle(const double dt, const double r);
 
 public:
