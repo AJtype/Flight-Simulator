@@ -1,5 +1,5 @@
 #include "Utils/utils.hpp"
-#include "global_data/SimParams.hpp"
+#include "SimParams/SimParams.hpp"
 #include "UAV/UAV.hpp"
 #include <fstream>
 

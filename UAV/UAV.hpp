@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../global_data/SimParams.hpp"
+#include "../SimParams/SimParams.hpp"
 #include "../Utils/utils.hpp"
 #include <iostream>
 #include <fstream>
