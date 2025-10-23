@@ -23,7 +23,18 @@ int main() {
         drones.emplace_back(params, i);
     }
 
+    size_t cmdIndex = 0;
     for (double currentTime = 0.0; currentTime <= params.timeLim; currentTime += params.dt) {
+        while (cmdIndex < commands.size() && 
+         commands[cmdIndex].time <= currentTime) {
+            int uavId = commands[cmdIndex].uavId;
+            if (uavId < 0 || uavId >= params.nUav)
+                std::cout << "invalid ID";
+            else
+                drones[uavId].setTarget(commands[cmdIndex].target);
+            cmdIndex++;
+        }
+
         for (auto& uav : drones) {
             uav.update(params.dt);
             uav.writeOutput(currentTime);
