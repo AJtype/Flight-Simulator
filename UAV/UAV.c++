@@ -1,5 +1,29 @@
 #include "UAV.hpp"
 
+UAV::UAV(const SimParams &params, const int id)
+    : id(id), 
+      curr{params.start.x, params.start.y},
+      curr_z(params.z0),
+      v0(params.v0),
+      minRadius(params.r0),
+      azimuth(params.az),
+      target{params.start.x, params.start.y},
+      state(CIRCLINGAFTERTARGET),
+      centerComputed(false),
+      passed(false) {
+    updateVelocity();
+
+    std::string filename = "UAV" + std::to_string(id) + ".txt";
+    outFile.open(filename);
+    if (!outFile.is_open())
+        throw std::runtime_error("Failed to open UAV output file: " + filename);
+}
+
+UAV::~UAV() {
+    if (outFile.is_open())
+        outFile.close();
+}
+
 void UAV::computeCenter(const double r) {
     double angle_rad = degToRad(azimuth + 90.0); // 90° to the right for CW center
     center.x = curr.x + r * cos(angle_rad);
@@ -48,21 +72,6 @@ void UAV::moveCircle(const double dt, const double r) {
     moveStraight(dt);
 }
 
-UAV::UAV(const SimParams &params, const int id)
-    : id(id), curr{params.start.x, params.start.y}, curr_z(params.z0),
-      v0(params.v0), minRadius(params.r0), azimuth(params.az),
-      target{params.start.x, params.start.y},
-      state(CIRCLINGAFTERTARGET), centerComputed(false), passed(false) {
-    updateVelocity();
-    std::string filename = "UAV" + std::to_string(id) + ".txt";
-    outFile.open(filename);
-}
-
-UAV::~UAV() {
-    if (outFile.is_open())
-        outFile.close();
-}
-
 void UAV::print() const {
     std::cout << "UAV.id = " << id << std::endl;
     std::cout << "UAV.curr.x = " << curr.x << std::endl;
@@ -81,7 +90,7 @@ int UAV::getId() const {
     return id;
 }
 
-void UAV::setTarget(double tx, double ty) {
+void UAV::setTarget(const double tx, const double ty) {
     target.x = tx;
     target.y = ty;
     state = NEWTARGET;

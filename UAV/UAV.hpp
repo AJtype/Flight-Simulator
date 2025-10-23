@@ -26,9 +26,9 @@ private:
 
     Point target;
 
-    double azimuth; // TODO: in what format is this saved?
+    double azimuth; // saved in degrees
     double minRadius; // currently doesn't change
-    double v0; // currently doesn't change // TODO: might change with vx and vy
+    double v0; // currently doesn't change
     double vx, vy;
     StateOption state;
 
@@ -74,7 +74,7 @@ private:
 
     /**
      * @brief Moves the UAV in a straight line based on its current velocity.
-     * This function updates the UAV's current position based on the celocity
+     * This function updates the UAV's current position based on the velocity
      * vector over the given time step.
      * @param dt The elapsed time (in seconds) over which to move the UAV. 
      *           Expected to be positive; validation is assumed to be
@@ -87,7 +87,7 @@ private:
     void moveCircle(const double dt, const double r);
 
 public:
-    UAV(const SimParams &params, const int id);
+    UAV(const SimParams& params, const int id);
     UAV(UAV&&) = default; // allow moving
     UAV& operator=(UAV&&) = default;
     UAV(const UAV&) = delete; // disable copying
@@ -95,7 +95,7 @@ public:
 
     void print() const;
     int getId() const;
-    void setTarget(double tx, double ty);
+    void setTarget(const double tx, const double ty);
 
     void update(const double dt);
     void writeOutput(const double time);
