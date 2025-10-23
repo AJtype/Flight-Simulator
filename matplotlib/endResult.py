@@ -1,14 +1,7 @@
+from funcs import read_sim_params
 import matplotlib.pyplot as plt
 import configparser
 import os
-
-def read_sim_params(filepath="../SimParams.ini"):
-    config = configparser.ConfigParser()
-    # ConfigParser requires sections, so we fake one
-    with open(filepath) as f:
-        ini_data = "[sim]\n" + f.read()
-    config.read_string(ini_data)
-    return int(config["sim"]["N_uav"])
 
 def read_uav_file(filepath):
     xs, ys = [], []
