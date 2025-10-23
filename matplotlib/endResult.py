@@ -1,19 +1,41 @@
 import matplotlib.pyplot as plt
+import configparser
+import os
 
-# Read file
-xs, ys = [], []
-with open("../UAV1.txt", "r") as f:
-    for line in f:
-        t, x, y, azi = map(float, line.split())
-        xs.append(x)
-        ys.append(y)
+def read_sim_params(filepath="../SimParams.ini"):
+    config = configparser.ConfigParser()
+    # ConfigParser requires sections, so we fake one
+    with open(filepath) as f:
+        ini_data = "[sim]\n" + f.read()
+    config.read_string(ini_data)
+    return int(config["sim"]["N_uav"])
 
-# Plot entire path instantly
-plt.figure()
-plt.plot(xs, ys, marker='o')  # Shows all points and path
-plt.xlabel("X")
-plt.ylabel("Y")
-plt.title("Object Path")
-plt.xlim(min(xs)-1, max(xs)+1)
-plt.ylim(min(ys)-1, max(ys)+1)
-plt.show()
+def read_uav_file(filepath):
+    xs, ys = [], []
+    with open(filepath, "r") as f:
+        for line in f:
+            _, x, y, _ = map(float, line.split())
+            xs.append(x)
+            ys.append(y)
+    return xs, ys
+
+def plot_uav_path(uav_index):
+    filename = f"../UAV{uav_index}.txt"
+    if not os.path.isfile(filename):
+        print(f"File {filename} not found.")
+        return
+    xs, ys = read_uav_file(filename)
+    plt.figure()
+    plt.plot(xs, ys, marker='o')
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title(f"UAV {uav_index} Path")
+    plt.xlim(min(xs)-1, max(xs)+1)
+    plt.ylim(min(ys)-1, max(ys)+1)
+    plt.grid(True)
+
+if __name__ == "__main__":
+    N_uav = read_sim_params()
+    for i in range(0, N_uav):
+        plot_uav_path(i)
+    plt.show()  # Opens all figures at once
